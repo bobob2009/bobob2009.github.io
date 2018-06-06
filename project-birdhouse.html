@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Entrepreneur, Developer, Motorcycle Adventurer">
+    <meta name="author" content="Keith Porter">
+    <meta property="og:image" content="http://www.keithbporter.com/assets/img/about.jpg">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+
+    <title>Keith Porter</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Keith Porter</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Home</a></li>
+            <li><a href="about">About</a></li>
+            <li class="active"><a href="/#works">Works</a></li>
+            <li><a href="Resume_Porter_Keith_Mar_2018.pdf">Resume</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+	<div id="project-birdhouse-wrap">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3">
+					<h4>FACIAL RECOGNITION FOR</h4>
+                    <h1>PROJECT BIRDHOUSE</h1>
+                    <h4>ROLE: COO</h4>
+				</div>
+			</div><!--/row -->
+	    </div> <!-- /container -->
+	</div><!--/project-birdhouse-wrap -->
+	
+	<section id="works"></section>
+	<div class="container">
+		<div class="row centered mt mb">
+			<div class="col-lg-8 col-lg-offset-2">
+                <p style="text-align: left;">
+                    <a href="http://www.projectbirdhouse.com">projectbirdhouse.com</a>
+                    <br />
+                    May, 2016 - October, 2016
+				    <br /><br />
+				    Product: A camera / computer vision based device to detect and track customer&#39;s faces in brick and mortar stores. Much like what Google Analytics provides for websites, but in real life.
+                    <br />
+                </p>
+                <p style="text-align: center;">
+                    Rendering of device with camera + Really mediocre photo of device with camera
+                </p>
+                <p style="text-align: left;">
+                    <img class="img-responsive" src="assets/img/project-birdhouse-1.png" />
+                    <br /><br />
+                    With my time at <a href="kapture">Kapture</a> wrapping up, I began asking other tech entrepreneurs if they need any help for the upcoming six months, as I had a motorcycle trip throughout the western hemisphere with <a href="frio-to-fuego">Frio to Fuego</a> planned to start then. Offers to help launch a venture capital fund, to be a web developer for an A/B testing company, and to flip houses were all considered until I heard about Project Birdhouse.
+                    <br /><br />
+                    I joined on as the third person working on this, but the first full time person, only a few weeks after its conception. As a nascent company, my first challenge as project lead was to come up with a plan for how we would assess the various available hardware and software tools we might use. With this done, I got right to work researching, comparing, and testing the various available microcomputers (Arduino, Raspberry Pi, miniPC, etc), their associated cameras, and facial processing software tools that would form the basis of our product.
+                    <br /><br />
+                    After testing each option in their own separate sandbox and choosing our beta toolbox, my biggest challenge of all came in putting together a cohesive Python-based system that could:
+                    <br />
+                    1. Input high quality images of faces in a retail environment
+                    <br />
+                    2. Detect if and where there are faces within the current image
+                    <br />
+                    3. Generate a unique ID for that face based on its defining characteristics
+                    <br />
+                    4. Estimate that face&#39;s age, gender, and if it bears any of a subset of common emotions
+                    <br />
+                    5. Concurrently and cohesively assemble that data from multiple devices into a central data store in AWS
+                    <br />
+                    6. Operate all of these tasks efficiently enough that a small embedded computer can complete them at a reasonable frame rate
+                    <br /><br />
+                    Given that each of the software packages I was working with had been designed independently, integrating them to accomplish these tasks proved correspondingly painful.
+                    <br /><br />
+                </p>
+                <p style="text-align: center;">
+                    Object oriented heirarchy, obfuscated
+                </p>
+                <p style="text-align: left;">
+                    <img class="img-responsive" src="assets/img/project-birdhouse-2.png" />
+                    <br />
+                    Warning: Technical jargon ahead.
+                    <br /><br />
+                    First I built and tested two different ways of grabbing camera images, single threaded and multiprocessing. In the single threaded design the device would request an image from the camera, process it through several different tools for facial analysis, submit it to the database, and then repeat the process. In the multiprocessing architecture, there were several different subprocesses operating autonomously to complete these tasks, sharing data amongst themselves using locked queues. The multiprocessing architecture was more complicated but performed better as it maintained a smoother connection with the camera.
+                    <br /><br />
+                    Second, processing an image through our facial identification neural network was costly in terms of CPU time and we wanted to ensure that we only used it if absolutely necessary. So I developed a tiered approach of facial detection to reduce the workload. We ended up running 3 overlapping facial detection algorithms to efficiently filter the images for faces. For brevity I&#39;ll describe them as: fast and inaccurate, medium, and very accurate but slow. The fast and inaccurate facial detection algorithm would run first, but tended to have quite a few false positives. If it detected anything, we would pass along the resulting subset of the image to the medium facial detection algorithm. If that one also found a face there, then we were in luck and would pass it on to the third algorithm.
+                    <br /><br />
+                    Third, since we were operating this distributed computing model, I had to modify our chosen facial identification library to operate on an embedded, OpenCL-capable GPU. This required changes to the compiler, the neural network model, and our surrounding code in order to work. Implementing this change shifted a significant load of work off of our CPU, truly enabling our software to operate at an embedded level.
+                    <br /><br />
+                    These technical challenges yielded &gt;5,000 lines of completed code and they represented my day to day tasks. However, a large part of my fulfilment came from hiring our next two team members and onboarding our first beta client. Being able to work on all aspects of the business and truly feel its influence beyond my own code was (and hopefully always will be) a very rewarding experience.
+                    <br /><br />
+                    Continue to read more about motorcycling around the world with <a href="frio-to-fuego">Frio to Fuego.</a>
+                </p>
+            </div>
+
+		</div><!--/row -->
+	</div><!--/container -->
+	
+	<div id="social">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-3 col-lg-offset-3">
+					<a href="http://www.facebook.com/keith.porter.3511"><i class="fa fa-facebook"></i></a>
+				</div>
+				<div class="col-lg-3">
+					<a href="http://www.linkedin.com/pub/keith-porter/1b/8b4/966/"><i class="fa fa-linkedin"></i></a>
+				</div>
+			
+			</div><!--/row -->
+		</div><!--/container -->
+	</div><!--/social -->
+
+	<div id="footerwrap">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-4">
+					<p><b>ENTREPRENEUR, DEVELOPER, MOTORCYCLE ADVENTURER</b></p>
+				</div>
+			
+				<div class="col-lg-4">
+					<p>Currently wandering around the Americas by motorcycle. Interested in software development jobs.</p>
+				</div>
+				<div class="col-lg-4">
+					<p>me@keithbporter.com</p>
+				</div>
+			</div>
+		</div>
+	</div><!--/footerwrap -->
+	
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-33571255-1', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </body>
+</html>
